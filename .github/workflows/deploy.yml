@@ -28,11 +28,6 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
-      - name: Copy files from mockOWUI-fixed to root
-        run: |
-          cp -r mockOWUI-fixed/* .
-          rm -rf mockOWUI-fixed
-          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

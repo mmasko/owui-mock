@@ -11,9 +11,9 @@ if ! command -v gh-pages &> /dev/null; then
     npm install -g gh-pages
 fi
 
-# Deploy the mockOWUI-fixed directory to gh-pages branch
-echo "📦 Deploying mockOWUI-fixed directory..."
-gh-pages -d mockOWUI-fixed
+# Deploy the current directory to gh-pages branch
+echo "📦 Deploying current directory..."
+gh-pages -d .
 
 echo "✅ Deployment complete!"
 echo "🌐 Your site will be available at: https://yourusername.github.io/your-repo-name"

@@ -1,0 +1,37 @@
+{
+  "name": "mock-chat-assistant",
+  "version": "3.0.0",
+  "description": "A sophisticated mock chat assistant interface with dark theme and administrative controls",
+  "main": "index.html",
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d .",
+    "build": "echo 'No build step required for static site'",
+    "start": "npx http-server . -p 3000 -o",
+    "dev": "npx http-server . -p 3000 -o"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/your-repo-name.git"
+  },
+  "keywords": [
+    "chat",
+    "assistant",
+    "ui",
+    "dark-theme",
+    "javascript",
+    "california",
+    "state-employee",
+    "government"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/your-repo-name/issues"
+  },
+  "homepage": "https://yourusername.github.io/your-repo-name",
+  "devDependencies": {
+    "gh-pages": "^6.1.1",
+    "http-server": "^14.1.1"
+  }
+}
