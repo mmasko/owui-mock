@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Chat Assistant v3</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar for Chat History -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar__header">
+                <button class="sidebar__menu-btn" id="menuBtn" aria-label="Menu">
+                    <span class="sidebar__menu-icon">☰</span>
+                </button>
+                <button class="sidebar__new-chat" id="newChatBtn" aria-label="Start new chat">
+                    <span class="sidebar__new-chat-icon">✏️</span>
+                    <span class="sidebar__new-chat-text">New Chat</span>
+                </button>
+            </div>
+            
+            <div class="sidebar__nav">
+                <div class="sidebar__nav-item sidebar__nav-item--active">
+                    <span class="sidebar__nav-icon">💬</span>
+                    <span class="sidebar__nav-text">Chats</span>
+                </div>
+                <div class="sidebar__nav-item">
+                    <span class="sidebar__nav-icon">🔍</span>
+                    <span class="sidebar__nav-text">Search</span>
+                </div>
+                <div class="sidebar__nav-item">
+                    <span class="sidebar__nav-icon">📝</span>
+                    <span class="sidebar__nav-text">Notes</span>
+                </div>
+                <div class="sidebar__nav-item">
+                    <span class="sidebar__nav-icon">🏢</span>
+                    <span class="sidebar__nav-text">Workspace</span>
+                </div>
+            </div>
+            
+            <div class="sidebar__content">
+                <div class="sidebar__chats" id="chatHistory" role="list" aria-label="Previous chats">
+                    <!-- Chat history items will be populated here -->
+                </div>
+                
+                <div class="sidebar__empty" id="emptyState">
+                    <p class="sidebar__empty-text">No previous chats</p>
+                    <p class="sidebar__empty-subtext">Start a conversation to see your chat history</p>
+                </div>
+            </div>
+            
+            <div class="sidebar__footer">
+                <!-- User info removed as requested -->
+            </div>
+        </aside>
+
+        <!-- Toggle button for mobile -->
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle chat history sidebar">
+            <span class="sidebar-toggle__icon">☰</span>
+        </button>
+
+        <!-- Main Chat Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header__left">
+                    <div class="header__model">
+                        <span class="header__model-icon">🤖</span>
+                        <span class="header__model-name" id="modelName">Meta Llama 4 Scout 17B Instruct</span>
+                        <button class="header__model-dropdown" aria-label="Change model">▼</button>
+                    </div>
+                </div>
+                <div class="header__right">
+                    <span class="header__chat-title" id="currentChatTitle">just a test</span>
+                </div>
+            </header>
+
+            <!-- Chat Messages Area -->
+            <div class="chat" role="main">
+                <div class="chat__messages" id="chatMessages" aria-live="polite" aria-label="Chat messages">
+                    <!-- Messages will be added here dynamically -->
+                </div>
+            </div>
+
+            <!-- Input Composer -->
+            <footer class="composer">
+                <form class="composer__form" id="chatForm">
+                    <div class="composer__input-group">
+                        <button class="composer__attach" type="button" aria-label="Attach file">+</button>
+                        <label for="messageInput" class="sr-only">Type your message</label>
+                        <input
+                            type="text"
+                            id="messageInput"
+                            class="composer__input"
+                            placeholder="Send a Message"
+                            autocomplete="off"
+                            aria-describedby="inputHelp"
+                        >
+                        <button class="composer__mic" type="button" aria-label="Voice input">🎤</button>
+                        <button class="mode-toggle" id="modeToggle" type="button" aria-pressed="false">
+                            <span class="mode-toggle__text">Text Mode</span>
+                        </button>
+                        <button class="composer__send" type="submit" aria-label="Send message">🎯</button>
+                    </div>
+                    <div id="inputHelp" class="sr-only">Press Enter to send, Escape to clear</div>
+                </form>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/storage.js"></script>
+    <script src="assets/js/matcher.js"></script>
+    <script src="assets/js/ui.js"></script>
+    <script src="assets/js/chat.js"></script>
+    <script src="assets/js/sidebar.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>

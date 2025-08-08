@@ -1,0 +1,21 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2"/>
+  <rect x="20" y="20" width="360" height="40" fill="#3498db" rx="4"/>
+  <text x="200" y="45" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Sample Screenshot</text>
+  
+  <rect x="20" y="80" width="360" height="180" fill="white" stroke="#e1e8ed" stroke-width="1" rx="4"/>
+  
+  <circle cx="60" cy="120" r="15" fill="#e74c3c"/>
+  <rect x="90" y="110" width="200" height="8" fill="#ecf0f1" rx="4"/>
+  <rect x="90" y="125" width="150" height="8" fill="#ecf0f1" rx="4"/>
+  
+  <circle cx="60" cy="160" r="15" fill="#2ecc71"/>
+  <rect x="90" y="150" width="180" height="8" fill="#ecf0f1" rx="4"/>
+  <rect x="90" y="165" width="120" height="8" fill="#ecf0f1" rx="4"/>
+  
+  <circle cx="60" cy="200" r="15" fill="#f39c12"/>
+  <rect x="90" y="190" width="220" height="8" fill="#ecf0f1" rx="4"/>
+  <rect x="90" y="205" width="160" height="8" fill="#ecf0f1" rx="4"/>
+  
+  <text x="200" y="290" text-anchor="middle" fill="#95a5a6" font-family="Arial, sans-serif" font-size="12">Mock Interface Screenshot</text>
+</svg>

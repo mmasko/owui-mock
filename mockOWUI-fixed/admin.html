@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Interface - Chat Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f0f;
+            color: #e5e5e5;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .header p {
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-section {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #2a2a2a;
+        }
+
+        .admin-section h2 {
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ccc;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background: #2a2a2a;
+            border: 1px solid #404040;
+            border-radius: 6px;
+            color: #e5e5e5;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background: #0052a3;
+        }
+
+        .btn-secondary {
+            background: #404040;
+        }
+
+        .btn-secondary:hover {
+            background: #505050;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .rules-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            background: #2a2a2a;
+        }
+
+        .rule-item {
+            padding: 1rem;
+            border-bottom: 1px solid #404040;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .rule-item:last-child {
+            border-bottom: none;
+        }
+
+        .rule-content {
+            flex: 1;
+        }
+
+        .rule-match {
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+        }
+
+        .rule-response {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .rule-type {
+            display: inline-block;
+            background: #0066cc;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .rule-type.image {
+            background: #28a745;
+        }
+
+        .rule-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        .btn-small {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0066cc;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #0066cc;
+            text-decoration: none;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: #28a745;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .toast.error {
+            background: #dc3545;
+        }
+
+        .toast.info {
+            background: #17a2b8;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Chat</a>
+        
+        <div class="header">
+            <h1>Admin Interface</h1>
+            <p>Manage chat responses and allowed prompts</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalRules">0</div>
+                <div class="stat-label">Total Rules</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="textRules">0</div>
+                <div class="stat-label">Text Responses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="imageRules">0</div>
+                <div class="stat-label">Image Responses</div>
+            </div>
+        </div>
+
+        <!-- Persistence Status -->
+        <div class="admin-section" style="margin-bottom: 2rem;">
+            <h2>Rule Persistence Status</h2>
+            <div id="persistenceStatus">
+                <div style="color: #888;">Loading status...</div>
+            </div>
+            <div style="margin-top: 1rem;">
+                <button class="btn btn-secondary" onclick="clearLocalStorage()">Reset to Default Rules</button>
+                <button class="btn btn-secondary" onclick="testChatConnection()" style="margin-left: 0.5rem;">Test Chat Connection</button>
+            </div>
+        </div>
+
+        <div class="admin-grid">
+            <div class="admin-section">
+                <h2>Add New Response</h2>
+                <form id="addRuleForm">
+                    <div class="form-group">
+                        <label for="ruleMatch">Exact Prompt (users will copy/paste this)</label>
+                        <input type="text" id="ruleMatch" placeholder="e.g., What are my employee benefits?" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ruleType">Response Type</label>
+                        <select id="ruleType" required>
+                            <option value="text">Text Response</option>
+                            <option value="image">Image Response</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ruleValue">Response Content</label>
+                        <textarea id="ruleValue" placeholder="Enter response text or image URL" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rulePriority">Priority (1-10)</label>
+                        <input type="number" id="rulePriority" min="1" max="10" value="5" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ruleFollowup">Follow-up Suggestions (one per line)</label>
+                        <textarea id="ruleFollowup" placeholder="What are your office hours?&#10;How do I contact HR?&#10;Tell me about benefits"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn">Add Response</button>
+                </form>
+            </div>
+
+            <div class="admin-section">
+                <h2>Current Responses</h2>
+                <div class="rules-list" id="rulesList">
+                    <!-- Rules will be loaded here -->
+                </div>
+                <div style="margin-top: 1rem;">
+                    <button class="btn btn-secondary" onclick="exportRules()">Export Rules</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">Import Rules</button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importRules(event)">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let rules = [];
+
+        // Load rules on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadRules();
+            updateStats();
+            renderRules();
+            updatePersistenceStatus();
+        });
+
+        // Get fallback rules (exact match prompts)
+        function getFallbackRules() {
+            return [
+                {
+                    "match": "What kind of questions can you help with?",
+                    "type": "text",
+                    "value": "I can assist California state employees with:\n• Information about state employee benefits and resources\n• Guidance on accessing government services\n• General workplace policies and procedures\n• Technical support for common issues\n• Directions to relevant departments and contacts\n\nI'm designed specifically to support state employees in their daily work.",
+                    "caseSensitive": false,
+                    "contains": false,
+                    "priority": 1,
+                    "followup": [
+                        "Can you help with technical issues?",
+                        "How do I access employee benefits information?",
+                        "What workplace policies can you explain?",
+                        "Can you provide department contact information?"
+                    ]
+                },
+                {
+                    "match": "Can you provide information on state employee resources?",
+                    "type": "text",
+                    "value": "California state employees have access to comprehensive benefits including:\n• Health insurance through CalPERS\n• Retirement planning and pension information\n• Professional development opportunities\n• Employee assistance programs\n• Flexible work arrangements\n\nFor detailed information, I recommend visiting the CalHR website or contacting your HR department.",
+                    "caseSensitive": false,
+                    "contains": false,
+                    "priority": 2,
+                    "followup": [
+                        "How do I contact my HR department?",
+                        "What is CalPERS and how do I access it?",
+                        "Can you explain flexible work arrangements?",
+                        "What professional development is available?"
+                    ]
+                },
+                {
+                    "match": "How do I access California state government services?",
+                    "type": "text",
+                    "value": "California offers numerous online services for both employees and citizens:\n• CA.gov portal for general services\n• Employee self-service systems\n• Benefits enrollment and management\n• Training and certification programs\n• Internal communication platforms\n\nMost services are accessible through your employee portal or the main CA.gov website.",
+                    "caseSensitive": false,
+                    "contains": false,
+                    "priority": 3,
+                    "followup": [
+                        "How do I access the employee portal?",
+                        "What training programs are available?",
+                        "Can you help with benefits enrollment?",
+                        "Where do I find internal communications?"
+                    ]
+                },
+                {
+                    "match": "What are your limitations as a state employee assistant?",
+                    "type": "text",
+                    "value": "As a state employee assistant, I have several important limitations:\n• I cannot access personal employee records or confidential information\n• I cannot make official policy decisions or interpretations\n• I cannot process transactions or make changes to your accounts\n• I cannot provide legal advice or medical guidance\n• I can only provide general information and guidance\n\nFor specific issues, please contact the appropriate department directly.",
+                    "caseSensitive": false,
+                    "contains": false,
+                    "priority": 4,
+                    "followup": [
+                        "Who should I contact for HR issues?",
+                        "How do I get official policy interpretations?",
+                        "Where can I access my employee records?",
+                        "What departments handle specific issues?"
+                    ]
+                },
+                {
+                    "match": "Can you help with technical issues?",
+                    "type": "text",
+                    "value": "For technical issues, I can provide basic troubleshooting guidance:\n• Check your network connection\n• Clear your browser cache and cookies\n• Restart your computer if applications are slow\n• Ensure you're using supported browsers (Chrome, Firefox, Edge)\n• Contact your local IT support for hardware issues\n\nFor complex technical problems, please submit a ticket to your IT help desk.",
+                    "caseSensitive": false,
+                    "contains": false,
+                    "priority": 5,
+                    "followup": [
+                        "How do I contact IT support?",
+                        "What browsers are officially supported?",
+                        "How do I submit an IT help desk ticket?",
+                        "Can you help with specific software issues?"
+                    ]
+                },
+                {
+                    "match": "*",
+                    "type": "text",
+                    "value": "I'm sorry, I don't understand that request. I'm designed to help California state employees with specific topics. Please copy and paste one of the exact prompts from the suggestions below, or contact your administrator to add new approved prompts.",
+                    "caseSensitive": false,
+                    "contains": false,
+                    "priority": 999,
+                    "followup": [
+                        "What kind of questions can you help with?",
+                        "Can you provide information on state employee resources?",
+                        "How do I access California state government services?",
+                        "Can you help with technical issues?"
+                    ]
+                }
+            ];
+        }
+
+        // Load rules from localStorage first, then fallback to replies.json
+        async function loadRules() {
+            try {
+                // First try to load from localStorage (admin changes)
+                const localRules = localStorage.getItem('chatRules');
+                if (localRules) {
+                    const data = JSON.parse(localRules);
+                    if (data.rules && Array.isArray(data.rules)) {
+                        rules = data.rules;
+                        console.log('Rules loaded successfully from localStorage:', rules.length, 'rules');
+                        return;
+                    }
+                }
+
+                // Fallback to JSON file if no localStorage data
+                const response = await fetch('assets/data/replies.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                rules = data.rules || [];
+                console.log('Rules loaded successfully from JSON:', rules.length, 'rules');
+            } catch (error) {
+                console.error('Failed to load rules from JSON, using fallback:', error);
+                rules = getFallbackRules();
+                console.log('Fallback rules loaded:', rules.length, 'rules');
+                showToast('Using embedded fallback rules - this is normal when opening files directly in browser', 'info');
+            }
+        }
+
+        // Save rules to localStorage (immediately available in chat interface)
+        function saveRules() {
+            const data = { rules };
+            localStorage.setItem('chatRules', JSON.stringify(data));
+            
+            // Also create a downloadable file for backup
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            showToast('Rules saved to localStorage! Changes are now live in the chat interface.');
+            
+            // Update the status display
+            updatePersistenceStatus();
+        }
+
+        // Update persistence status display
+        function updatePersistenceStatus() {
+            const localRules = localStorage.getItem('chatRules');
+            const statusElement = document.getElementById('persistenceStatus');
+            if (statusElement) {
+                if (localRules) {
+                    const data = JSON.parse(localRules);
+                    statusElement.innerHTML = `
+                        <div style="color: #28a745; font-weight: 500;">
+                            ✅ ${data.rules.length} rules active in localStorage
+                        </div>
+                        <div style="color: #888; font-size: 0.9rem;">
+                            Changes are live in the chat interface
+                        </div>
+                    `;
+                } else {
+                    statusElement.innerHTML = `
+                        <div style="color: #ffc107; font-weight: 500;">
+                            ⚠️ Using default JSON file rules
+                        </div>
+                        <div style="color: #888; font-size: 0.9rem;">
+                            Add rules to override defaults
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Add new rule
+        document.getElementById('addRuleForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const match = document.getElementById('ruleMatch').value.trim();
+            const type = document.getElementById('ruleType').value;
+            const value = document.getElementById('ruleValue').value.trim();
+            const priority = parseInt(document.getElementById('rulePriority').value);
+            const followupText = document.getElementById('ruleFollowup').value.trim();
+            
+            if (!match || !value) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            const followup = followupText ? followupText.split('\n').filter(line => line.trim()) : [];
+            
+            const newRule = {
+                match: match, // Store as exact string, not array
+                type,
+                value,
+                priority,
+                followup,
+                caseSensitive: false, // Case insensitive exact match
+                contains: false // Exact match only
+            };
+            
+            rules.push(newRule);
+            saveRules();
+            updateStats();
+            renderRules();
+            
+            // Clear form
+            document.getElementById('addRuleForm').reset();
+            document.getElementById('rulePriority').value = 5;
+            
+            showToast('Exact prompt response added successfully!');
+        });
+
+        // Update statistics
+        function updateStats() {
+            const totalRules = rules.length;
+            const textRules = rules.filter(r => r.type === 'text').length;
+            const imageRules = rules.filter(r => r.type === 'image').length;
+            
+            document.getElementById('totalRules').textContent = totalRules;
+            document.getElementById('textRules').textContent = textRules;
+            document.getElementById('imageRules').textContent = imageRules;
+        }
+
+        // Render rules list
+        function renderRules() {
+            const rulesList = document.getElementById('rulesList');
+            
+            if (rules.length === 0) {
+                rulesList.innerHTML = '<div style="padding: 2rem; text-align: center; color: #888;">No rules found</div>';
+                return;
+            }
+            
+            const sortedRules = [...rules].sort((a, b) => (b.priority || 5) - (a.priority || 5));
+            
+            rulesList.innerHTML = sortedRules.map((rule, sortedIndex) => {
+                // Find the original index in the unsorted array
+                const originalIndex = rules.findIndex(r => r === rule);
+                return `
+                <div class="rule-item">
+                    <div class="rule-content">
+                        <div class="rule-match">${rule.match}</div>
+                        <div class="rule-response">${rule.value.substring(0, 100)}${rule.value.length > 100 ? '...' : ''}</div>
+                        <span class="rule-type ${rule.type}">${rule.type}</span>
+                        ${rule.priority ? `<span style="margin-left: 0.5rem; color: #888;">Priority: ${rule.priority}</span>` : ''}
+                    </div>
+                    <div class="rule-actions">
+                        <button class="btn btn-small btn-secondary" onclick="editRule(${originalIndex})">Edit</button>
+                        <button class="btn btn-small btn-danger" onclick="deleteRule(${originalIndex})">Delete</button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Delete rule
+        function deleteRule(index) {
+            if (confirm('Are you sure you want to delete this rule?')) {
+                rules.splice(index, 1);
+                saveRules();
+                updateStats();
+                renderRules();
+                showToast('Rule deleted successfully!');
+            }
+        }
+
+        // Edit rule (simplified - just populate form)
+        function editRule(index) {
+            const rule = rules[index];
+            
+            document.getElementById('ruleMatch').value = rule.match; // Always a string for exact matches
+            document.getElementById('ruleType').value = rule.type;
+            document.getElementById('ruleValue').value = rule.value;
+            document.getElementById('rulePriority').value = rule.priority || 5;
+            document.getElementById('ruleFollowup').value = rule.followup ? rule.followup.join('\n') : '';
+            
+            // Remove the rule so it can be re-added (without confirmation dialog)
+            rules.splice(index, 1);
+            saveRules();
+            updateStats();
+            renderRules();
+            
+            showToast('Rule loaded for editing. Modify and click "Add Response" to save.');
+        }
+
+        // Export rules
+        function exportRules() {
+            const data = { rules };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'replies.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Rules exported successfully!');
+        }
+
+        // Import rules
+        function importRules(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.rules && Array.isArray(data.rules)) {
+                        rules = data.rules;
+                        saveRules();
+                        updateStats();
+                        renderRules();
+                        showToast('Rules imported successfully!');
+                    } else {
+                        showToast('Invalid file format', 'error');
+                    }
+                } catch (error) {
+                    showToast('Error parsing file', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Clear localStorage and reset to default rules
+        function clearLocalStorage() {
+            if (confirm('This will reset all rules to defaults and remove your custom rules. Are you sure?')) {
+                localStorage.removeItem('chatRules');
+                showToast('localStorage cleared! Chat interface will use default rules.', 'info');
+                updatePersistenceStatus();
+                
+                // Reload rules from JSON
+                loadRules().then(() => {
+                    updateStats();
+                    renderRules();
+                });
+            }
+        }
+
+        // Test connection to chat interface
+        function testChatConnection() {
+            const testWindow = window.open('index.html', '_blank');
+            if (testWindow) {
+                showToast('Chat interface opened in new tab. Test your custom prompts!', 'info');
+            } else {
+                showToast('Please allow popups to test the chat interface', 'error');
+            }
+        }
+
+        // Update persistence status on rule changes
+        const originalSaveRules = saveRules;
+        saveRules = function() {
+            originalSaveRules();
+            updatePersistenceStatus();
+        };
+    </script>
+</body>
+</html>

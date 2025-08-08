@@ -1,0 +1,158 @@
+{
+  "rules": [
+    {
+      "match": "What kind of questions can you help with?",
+      "type": "text",
+      "value": "I can assist California state employees with:\n• Information about state employee benefits and resources\n• Guidance on accessing government services\n• General workplace policies and procedures\n• Technical support for common issues\n• Directions to relevant departments and contacts\n\nI'm designed specifically to support state employees in their daily work.",
+      "caseSensitive": false,
+      "contains": false,
+      "priority": 1,
+      "followup": [
+        "Can you help with technical issues?",
+        "How do I access employee benefits information?",
+        "What workplace policies can you explain?",
+        "Can you provide department contact information?"
+      ]
+    },
+    {
+      "match": "Can you provide information on state employee resources?",
+      "type": "text",
+      "value": "California state employees have access to comprehensive benefits including:\n• Health insurance through CalPERS\n• Retirement planning and pension information\n• Professional development opportunities\n• Employee assistance programs\n• Flexible work arrangements\n\nFor detailed information, I recommend visiting the CalHR website or contacting your HR department.",
+      "caseSensitive": false,
+      "contains": false,
+      "priority": 2,
+      "followup": [
+        "How do I contact my HR department?",
+        "What is CalPERS and how do I access it?",
+        "Can you explain flexible work arrangements?",
+        "What professional development is available?"
+      ]
+    },
+    {
+      "match": "How do I access California state government services?",
+      "type": "text",
+      "value": "California offers numerous online services for both employees and citizens:\n• CA.gov portal for general services\n• Employee self-service systems\n• Benefits enrollment and management\n• Training and certification programs\n• Internal communication platforms\n\nMost services are accessible through your employee portal or the main CA.gov website.",
+      "caseSensitive": false,
+      "contains": false,
+      "priority": 3,
+      "followup": [
+        "How do I access the employee portal?",
+        "What training programs are available?",
+        "Can you help with benefits enrollment?",
+        "Where do I find internal communications?"
+      ]
+    },
+    {
+      "match": "What are your limitations as a state employee assistant?",
+      "type": "text",
+      "value": "As a state employee assistant, I have several important limitations:\n• I cannot access personal employee records or confidential information\n• I cannot make official policy decisions or interpretations\n• I cannot process transactions or make changes to your accounts\n• I cannot provide legal advice or medical guidance\n• I can only provide general information and guidance\n\nFor specific issues, please contact the appropriate department directly.",
+      "caseSensitive": false,
+      "contains": false,
+      "priority": 4,
+      "followup": [
+        "Who should I contact for HR issues?",
+        "How do I get official policy interpretations?",
+        "Where can I access my employee records?",
+        "What departments handle specific issues?"
+      ]
+    },
+    {
+      "match": "Can you help with technical issues?",
+      "type": "text",
+      "value": "For technical issues, I can provide basic troubleshooting guidance:\n• Check your network connection\n• Clear your browser cache and cookies\n• Restart your computer if applications are slow\n• Ensure you're using supported browsers (Chrome, Firefox, Edge)\n• Contact your local IT support for hardware issues\n\nFor complex technical problems, please submit a ticket to your IT help desk.",
+      "caseSensitive": false,
+      "contains": false,
+      "priority": 5,
+      "followup": [
+        "How do I contact IT support?",
+        "What browsers are officially supported?",
+        "How do I submit an IT help desk ticket?",
+        "Can you help with specific software issues?"
+      ]
+    },
+    {
+      "match": "How do I contact my HR department?",
+      "type": "text",
+      "value": "To contact your HR department:\n• Check your employee directory for your specific department's HR contact\n• Visit the CalHR website at calhr.ca.gov\n• Use your employee self-service portal\n• Contact your immediate supervisor for HR contact information\n• Call the main department number and ask to be transferred to HR\n\nEach department may have different HR contact procedures, so check your department's internal resources first.",
+      "caseSensitive": false,
+      "contains": false,
+      "priority": 6,
+      "followup": [
+        "What is CalPERS and how do I access it?",
+        "Can you explain flexible work arrangements?",
+        "What professional development is available?",
+        "How do I access employee benefits information?"
+      ]
+    },
+    {
+      "match": "What is CalPERS and how do I access it?",
+      "type": "text",
+      "value": "CalPERS (California Public Employees' Retirement System) manages retirement and health benefits for California public employees:\n• Visit my.calpers.ca.gov to access your account\n• View retirement planning tools and calculators\n• Manage your health insurance enrollment\n• Access pension benefit information\n• Update personal information and beneficiaries\n\nYou'll need your CalPERS ID and PIN to log in. If you don't have these, contact CalPERS customer service at 1-888-CalPERS.",
+      "caseSensitive": false,
+      "contains": false,
+      "priority": 7,
+      "followup": [
+        "How do I contact my HR department?",
+        "Can you explain flexible work arrangements?",
+        "What professional development is available?",
+        "How do I access employee benefits information?"
+      ]
+    },
+    {
+      "match": "How do I access employee benefits information?",
+      "type": "text",
+      "value": "To access your employee benefits information:\n• Log into your employee self-service portal\n• Visit the CalHR website at calhr.ca.gov\n• Access your CalPERS account at my.calpers.ca.gov\n• Contact your department's HR representative\n• Review your employee handbook or benefits guide\n• Attend benefits enrollment sessions during open enrollment\n\nBenefits typically include health insurance, dental, vision, retirement planning, and various employee assistance programs.",
+      "caseSensitive": false,
+      "contains": false,
+      "priority": 8,
+      "followup": [
+        "What is CalPERS and how do I access it?",
+        "How do I contact my HR department?",
+        "Can you explain flexible work arrangements?",
+        "What professional development is available?"
+      ]
+    },
+    {
+      "match": "Can you explain flexible work arrangements?",
+      "type": "text",
+      "value": "California state employees may have access to various flexible work arrangements:\n• Telework/remote work options (subject to department approval)\n• Flexible scheduling within core business hours\n• Compressed work weeks (e.g., 4/10 schedule)\n• Job sharing arrangements\n• Alternative work locations\n\nAvailability depends on your position, department policies, and operational needs. Contact your supervisor or HR department to discuss options available to you.",
+      "caseSensitive": false,
+      "contains": false,
+      "priority": 9,
+      "followup": [
+        "How do I contact my HR department?",
+        "What workplace policies can you explain?",
+        "What professional development is available?",
+        "How do I access employee benefits information?"
+      ]
+    },
+    {
+      "match": "What professional development is available?",
+      "type": "text",
+      "value": "California state employees have access to various professional development opportunities:\n• CalHR training programs and workshops\n• Online learning platforms and courses\n• Leadership development programs\n• Professional certification reimbursement\n• Conference and seminar attendance\n• Cross-training and job rotation programs\n• Mentorship and coaching programs\n\nCheck with your HR department or supervisor about specific programs available to your classification and department.",
+      "caseSensitive": false,
+      "contains": false,
+      "priority": 10,
+      "followup": [
+        "How do I contact my HR department?",
+        "What workplace policies can you explain?",
+        "Can you explain flexible work arrangements?",
+        "How do I access employee benefits information?"
+      ]
+    },
+    {
+      "match": "*",
+      "type": "text",
+      "value": "I'm sorry, I don't understand that request. I'm designed to help California state employees with specific topics. Please copy and paste one of the exact prompts from the suggestions below, or contact your administrator to add new approved prompts.",
+      "caseSensitive": false,
+      "contains": false,
+      "priority": 999,
+      "followup": [
+        "What kind of questions can you help with?",
+        "Can you provide information on state employee resources?",
+        "How do I access California state government services?",
+        "Can you help with technical issues?"
+      ]
+    }
+  ]
+}
