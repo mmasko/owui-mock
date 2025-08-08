@@ -260,8 +260,14 @@ document.addEventListener('visibilitychange', () => {
 window.debugChat = {
     getStatus: () => window.app ? window.app.getStatus() : null,
     getRules: () => window.messageMatcher ? window.messageMatcher.getAllRules() : null,
+    getRulesSource: () => window.messageMatcher ? window.messageMatcher.getRulesSource() : null,
+    reloadRules: () => window.messageMatcher ? window.messageMatcher.reloadRules() : null,
     getHistory: () => window.chatManager ? window.chatManager.getMessageHistory() : null,
     clearChat: () => window.chatManager ? window.chatManager.clearChat() : null,
+    clearLocalStorage: () => {
+        localStorage.removeItem('chatRules');
+        console.log('localStorage cleared. Reload page to use JSON file rules.');
+    },
     testMessage: (msg) => window.chatManager ? window.chatManager.processUserMessage(msg) : null
 };
 

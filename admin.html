@@ -300,6 +300,18 @@
             </div>
         </div>
 
+        <!-- Persistence Status -->
+        <div class="admin-section" style="margin-bottom: 2rem;">
+            <h2>Rule Persistence Status</h2>
+            <div id="persistenceStatus">
+                <div style="color: #888;">Loading status...</div>
+            </div>
+            <div style="margin-top: 1rem;">
+                <button class="btn btn-secondary" onclick="clearLocalStorage()">Reset to Default Rules</button>
+                <button class="btn btn-secondary" onclick="testChatConnection()" style="margin-left: 0.5rem;">Test Chat Connection</button>
+            </div>
+        </div>
+
         <div class="admin-grid">
             <div class="admin-section">
                 <h2>Add New Response</h2>
@@ -358,6 +370,7 @@
             await loadRules();
             updateStats();
             renderRules();
+            updatePersistenceStatus();
         });
 
         // Get fallback rules (exact match prompts)
@@ -450,9 +463,21 @@
             ];
         }
 
-        // Load rules from replies.json
+        // Load rules from localStorage first, then fallback to replies.json
         async function loadRules() {
             try {
+                // First try to load from localStorage (admin changes)
+                const localRules = localStorage.getItem('chatRules');
+                if (localRules) {
+                    const data = JSON.parse(localRules);
+                    if (data.rules && Array.isArray(data.rules)) {
+                        rules = data.rules;
+                        console.log('Rules loaded successfully from localStorage:', rules.length, 'rules');
+                        return;
+                    }
+                }
+
+                // Fallback to JSON file if no localStorage data
                 const response = await fetch('assets/data/replies.json');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -468,16 +493,47 @@
             }
         }
 
-        // Save rules to localStorage (in a real app, this would save to server)
+        // Save rules to localStorage (immediately available in chat interface)
         function saveRules() {
             const data = { rules };
             localStorage.setItem('chatRules', JSON.stringify(data));
             
-            // Also create a downloadable file
+            // Also create a downloadable file for backup
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             
-            showToast('Rules saved! Download the updated file to replace replies.json');
+            showToast('Rules saved to localStorage! Changes are now live in the chat interface.');
+            
+            // Update the status display
+            updatePersistenceStatus();
+        }
+
+        // Update persistence status display
+        function updatePersistenceStatus() {
+            const localRules = localStorage.getItem('chatRules');
+            const statusElement = document.getElementById('persistenceStatus');
+            if (statusElement) {
+                if (localRules) {
+                    const data = JSON.parse(localRules);
+                    statusElement.innerHTML = `
+                        <div style="color: #28a745; font-weight: 500;">
+                            ✅ ${data.rules.length} rules active in localStorage
+                        </div>
+                        <div style="color: #888; font-size: 0.9rem;">
+                            Changes are live in the chat interface
+                        </div>
+                    `;
+                } else {
+                    statusElement.innerHTML = `
+                        <div style="color: #ffc107; font-weight: 500;">
+                            ⚠️ Using default JSON file rules
+                        </div>
+                        <div style="color: #888; font-size: 0.9rem;">
+                            Add rules to override defaults
+                        </div>
+                    `;
+                }
+            }
         }
 
         // Add new rule
@@ -541,7 +597,10 @@
             
             const sortedRules = [...rules].sort((a, b) => (b.priority || 5) - (a.priority || 5));
             
-            rulesList.innerHTML = sortedRules.map((rule, index) => `
+            rulesList.innerHTML = sortedRules.map((rule, sortedIndex) => {
+                // Find the original index in the unsorted array
+                const originalIndex = rules.findIndex(r => r === rule);
+                return `
                 <div class="rule-item">
                     <div class="rule-content">
                         <div class="rule-match">${rule.match}</div>
@@ -550,11 +609,12 @@
                         ${rule.priority ? `<span style="margin-left: 0.5rem; color: #888;">Priority: ${rule.priority}</span>` : ''}
                     </div>
                     <div class="rule-actions">
-                        <button class="btn btn-small btn-secondary" onclick="editRule(${index})">Edit</button>
-                        <button class="btn btn-small btn-danger" onclick="deleteRule(${index})">Delete</button>
+                        <button class="btn btn-small btn-secondary" onclick="editRule(${originalIndex})">Edit</button>
+                        <button class="btn btn-small btn-danger" onclick="deleteRule(${originalIndex})">Delete</button>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         // Delete rule
@@ -578,10 +638,13 @@
             document.getElementById('rulePriority').value = rule.priority || 5;
             document.getElementById('ruleFollowup').value = rule.followup ? rule.followup.join('\n') : '';
             
-            // Remove the rule so it can be re-added
-            deleteRule(index);
+            // Remove the rule so it can be re-added (without confirmation dialog)
+            rules.splice(index, 1);
+            saveRules();
+            updateStats();
+            renderRules();
             
-            showToast('Exact prompt loaded for editing. Modify and click "Add Response" to save.');
+            showToast('Rule loaded for editing. Modify and click "Add Response" to save.');
         }
 
         // Export rules
@@ -633,6 +696,38 @@
                 toast.remove();
             }, 3000);
         }
+
+        // Clear localStorage and reset to default rules
+        function clearLocalStorage() {
+            if (confirm('This will reset all rules to defaults and remove your custom rules. Are you sure?')) {
+                localStorage.removeItem('chatRules');
+                showToast('localStorage cleared! Chat interface will use default rules.', 'info');
+                updatePersistenceStatus();
+                
+                // Reload rules from JSON
+                loadRules().then(() => {
+                    updateStats();
+                    renderRules();
+                });
+            }
+        }
+
+        // Test connection to chat interface
+        function testChatConnection() {
+            const testWindow = window.open('index.html', '_blank');
+            if (testWindow) {
+                showToast('Chat interface opened in new tab. Test your custom prompts!', 'info');
+            } else {
+                showToast('Please allow popups to test the chat interface', 'error');
+            }
+        }
+
+        // Update persistence status on rule changes
+        const originalSaveRules = saveRules;
+        saveRules = function() {
+            originalSaveRules();
+            updatePersistenceStatus();
+        };
     </script>
 </body>
 </html>

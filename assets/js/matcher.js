@@ -102,11 +102,25 @@ class MessageMatcher {
     }
 
     /**
-     * Load rules from replies.json
+     * Load rules from localStorage first, then fallback to replies.json
      * @returns {Promise<void>}
      */
     async loadRules() {
         try {
+            // First try to load from localStorage (admin changes)
+            const localRules = localStorage.getItem('chatRules');
+            if (localRules) {
+                const data = JSON.parse(localRules);
+                if (data.rules && Array.isArray(data.rules)) {
+                    this.rules = data.rules.sort((a, b) => (a.priority || 999) - (b.priority || 999));
+                    this.isLoaded = true;
+                    console.log('Rules loaded successfully from localStorage:', this.rules.length, 'rules');
+                    this.setupStorageListener();
+                    return;
+                }
+            }
+
+            // Fallback to JSON file if no localStorage data
             const response = await fetch('assets/data/replies.json');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -115,13 +129,47 @@ class MessageMatcher {
             this.rules = data.rules.sort((a, b) => (a.priority || 999) - (b.priority || 999));
             this.isLoaded = true;
             console.log('Rules loaded successfully from JSON:', this.rules.length, 'rules');
+            this.setupStorageListener();
         } catch (error) {
             console.error('Failed to load rules from JSON, using fallback:', error);
             // Use embedded fallback rules
             this.rules = this.getFallbackRules().sort((a, b) => (a.priority || 999) - (b.priority || 999));
             this.isLoaded = true;
             console.log('Fallback rules loaded:', this.rules.length, 'rules');
+            this.setupStorageListener();
         }
+    }
+
+    /**
+     * Set up listener for localStorage changes (cross-tab sync)
+     */
+    setupStorageListener() {
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'chatRules' && e.newValue) {
+                try {
+                    const data = JSON.parse(e.newValue);
+                    if (data.rules && Array.isArray(data.rules)) {
+                        this.rules = data.rules.sort((a, b) => (a.priority || 999) - (b.priority || 999));
+                        console.log('Rules updated from localStorage (cross-tab sync):', this.rules.length, 'rules');
+                        
+                        // Notify UI about rule changes if needed
+                        if (window.chatManager) {
+                            window.chatManager.showSystemMessage('Chat rules updated from admin panel.');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error parsing updated localStorage rules:', error);
+                }
+            }
+        });
+    }
+
+    /**
+     * Reload rules from localStorage (for manual refresh)
+     */
+    async reloadRules() {
+        await this.loadRules();
+        console.log('Rules reloaded manually');
     }
 
     /**
@@ -231,6 +279,19 @@ class MessageMatcher {
      */
     getAllRules() {
         return this.rules;
+    }
+
+    /**
+     * Get rules source information (for debugging)
+     * @returns {Object} - Information about where rules were loaded from
+     */
+    getRulesSource() {
+        const localRules = localStorage.getItem('chatRules');
+        return {
+            hasLocalStorage: !!localRules,
+            rulesCount: this.rules.length,
+            source: localRules ? 'localStorage' : 'JSON file or fallback'
+        };
     }
 }
 
